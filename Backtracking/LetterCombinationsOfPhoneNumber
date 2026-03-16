@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+char* phoneMap[] = {
+    "",
+    "",
+    "abc",
+    "def",
+    "ghi",
+    "jkl",
+    "mno",
+    "pqrs",
+    "tuv",
+    "wxyz"
+
+};
+
+void backtrack(char* digits, int index, char* current, char** result, int* returnSize) {
+    if (index == strlen(digit)) {
+        result[*returnSize] = strdup(current);
+        (*returnSize)++;
+        return;
+    }
+
+    char* letters = phoneMap[digits[index] - '0'];
+    for (int i=0; i < strlen(letters); i++) {
+        current[index] = letters[i];
+        current[index + 1] = '\0';
+        backtrack(digits, index + 1, current, result, returnSize);
+    }
+}
+
+char** letterCombinations(char* digits, int* returnSize) {
+    *returnSize = 0;
+    int len = strlen(digits);
+    if (len == 0) return NULL;
+
+    int totalCombinations = 1;
+    for (int i = 0; i < len; i++) {
+        int digit = digits[i] - '0';
+        totalCombinations *= strlen(phoneMap[digit]);
+    }
+
+    char** result = (char**)malloc(totalCombinations * sizeof(char*));
+    char* current = (char*)malloc((len +1) * sizeof(char));
+    backtrack(digits, 0, current, result, returnSize);
+
+    free(current);
+    return result;
+}
